@@ -1,0 +1,137 @@
+<!DOCTYPE html><html><head><title>Interior Koch Snowflake</title>
+
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="shortcut icon" href="favicon.ico">
+<meta name="viewport" content="width=689, initial-scale=1">
+
+</head>
+
+<body>
+	<center>
+
+		<table style="position:absolute; left:10px; top:10px; background-color:black;">
+			<td>
+				<a href="#popup1"><img title="Information" src="../jdgmiles.github.io/questionmark.png" style="width:60px; height:60px"></a><br>
+				<a href="https://twitter.com/jimdgmiles" target=blank_><img title="James Miles on Twitter" src="../jdgmiles.github.io/twitter.png" style="width:60px; height:60px"></a><br>
+				<a href="http://jdgmiles.github.io/" target="_blank"><img title="Projects Page" src="../jdgmiles.github.io/jdgm.png" style="width:60px; height:60px"></a><br>
+				<a href="index.html"><img title="Restart" src="../jdgmiles.github.io/R-White.png" style="width:60px; height:60px"></a></a>
+			</td>
+		</table>
+
+		<div id="popup1" class="overlay">
+			<div class="popup">
+	      <div style="font-family:Georgia; color:white; text-align:center; font-size:40px">&ldquo;Interior&rdquo; Koch Snowflake</div>
+	      <a class="close" href="#">&times;</a>
+	      <p style="font-family:Georgia; font-size:24px; color:white; text-align:center;">In <a href="https://jdgmiles.github.io/Koch-s-Snowflake-Iterated-Path/" target="_blank">my first Koch Snowflake animation</a> I used an iterative process which inserted a &ldquo;right turn, left turn, right turn&rdquo; string between each command in the previously generated circuit, to form the next circuit, and so on.<br><br>Starting with the basic three left turns circuit (to draw the initial triangle) that process was all that was required to form an infinite sequence of paths constructing <a href="https://en.wikipedia.org/wiki/Koch_snowflake" target="_blank">the conventional Koch Snowflake</a>.<br><br>The version you see here replaces that &ldquo;right turn, left turn, right turn&rdquo; string with a &ldquo;left turn, right turn, left turn&rdquo; string to construct this apparently &ldquo;interior&rdquo; Koch Snowflake!</p>
+	    </div>
+		</div>
+
+		<canvas id="canvas" style="padding:0px 80px 0px 80px;"></canvas>
+		<a id="bongo"></a>
+  </center>
+</body>
+</html>
+
+<script type="text/javascript">
+
+var field={width:620, height:540};
+var fieldcolor="white";
+var canvas=document.getElementById("canvas"), ctx = canvas.getContext("2d");
+var currentx=310;
+var currenty=7;
+var scale=600;
+var steps=Math.pow(2,5);
+var frame=0;
+var fps=1000;
+var instruction=0;
+var commands;
+var iteration=1;
+var iterationstage=0;
+var iterationstages=3;
+var colours=["black", "#EE0000", "#2277FF"];
+var colour=0;
+var thickness=20;
+var code=[];
+generatecode(6);
+generatecommands(code[6]);
+
+canvas.width = field.width;
+canvas.height = field.height;
+
+ctx.fillStyle=fieldcolor;
+ctx.fillRect(0,0,field.width,field.height);
+
+function draw(){
+	if(iterationstage==iterationstages){iterationstages=iterationstages*4; iterationstage=0; steps=steps*0.5; if(steps<2){steps=2;} scale=scale/3; thickness=thickness*0.5;}
+
+	if(instruction<commands.length){iterationstage++; piece(commands[instruction]);}
+}
+
+function piece(n){
+	ctx.beginPath();
+	ctx.moveTo(currentx,currenty);
+	if(n==1){currentx=currentx-(1/steps)*scale;}
+	if(n==2){currentx=currentx-(1/steps)*Math.cos(Math.PI/3)*scale; currenty=currenty+(1/steps)*Math.sin(Math.PI/3)*scale;}
+	if(n==3){currentx=currentx+(1/steps)*Math.cos(Math.PI/3)*scale; currenty=currenty+(1/steps)*Math.sin(Math.PI/3)*scale;}
+	if(n==4){currentx=currentx+(1/steps)*scale;}
+	if(n==5){currentx=currentx+(1/steps)*Math.cos(Math.PI/3)*scale; currenty=currenty-(1/steps)*Math.sin(Math.PI/3)*scale;}
+	if(n==6){currentx=currentx-(1/steps)*Math.cos(Math.PI/3)*scale; currenty=currenty-(1/steps)*Math.sin(Math.PI/3)*scale;}
+	ctx.lineTo(currentx,currenty);
+	ctx.lineWidth=thickness;
+	ctx.strokeStyle=colours[colour];
+	ctx.stroke();
+	frame++;
+	if(frame<steps){setTimeout(piece, 1000/fps, n);}
+	if(frame==steps){instruction++; frame=0; draw();}
+}
+
+function LorR(d, ls){ // I did this a clever way at first, but there was a really annoying bug that I just COULDN'T see the reason for so went with a dumb lookup table in the end
+	if(d=="A" && ls==1){return 2}
+	if(d=="A" && ls==2){return 3}
+	if(d=="A" && ls==3){return 4}
+	if(d=="A" && ls==4){return 5}
+	if(d=="A" && ls==5){return 6}
+	if(d=="A" && ls==6){return 1}
+	if(d=="L" && ls==1){return 3}
+	if(d=="L" && ls==2){return 4}
+	if(d=="L" && ls==3){return 5}
+	if(d=="L" && ls==4){return 6}
+	if(d=="L" && ls==5){return 1}
+	if(d=="L" && ls==6){return 2}
+	if(d=="B" && ls==1){return 5}
+	if(d=="B" && ls==2){return 6}
+	if(d=="B" && ls==3){return 1}
+	if(d=="B" && ls==4){return 2}
+	if(d=="B" && ls==5){return 3}
+	if(d=="B" && ls==6){return 4}
+	if(d=="R" && ls==1){return 6}
+	if(d=="R" && ls==2){return 1}
+	if(d=="R" && ls==3){return 2}
+	if(d=="R" && ls==4){return 3}
+	if(d=="R" && ls==5){return 4}
+	if(d=="R" && ls==6){return 5}
+}
+
+function generatecommands(p){
+	commands="2";
+	for(i=1; i<p.length; i++){
+		commands= commands + "" + LorR(p[i],commands[i-1]);
+	}
+}
+
+function generatecode(n){
+	code[0]="LLL";
+	code[n]="";
+	for(i=1; i<n; i++){
+		code[n]=code[n]+""+code[i-1];
+		code[i]="";
+		for(j=0; j<code[i-1].length; j++){
+			code[i]=code[i]+""+code[i-1][j]+""+"ABA";
+		}
+	}
+	code[n]=code[n]+""+code[n-1];
+}
+
+draw();
+
+</script>
