@@ -31,6 +31,23 @@
 </html>
 
 <script type="text/javascript">
+
+var field={width:650, height:650};
+
+var canvas=document.getElementById("canvas"), ctx = canvas.getContext("2d");
+canvas.width = field.width;
+canvas.height = field.height;
+
+var level=1;
+
+var levelinfo=[];
+
+levelinfo[1]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+
+levelinfo[2]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+
+var numbers=["   një", "   dy", "   tre", " katër", "  pesë", "gjashtë", " shtatë", "  tetë", " nëntë", " dhjetë"];
+
 var rightdown=0;
 var leftdown=0;
 var updown=0;
@@ -50,116 +67,186 @@ document.body.onkeyup = function(e){
 	if(e.keyCode == 40 || e.keyCode == 83){downdown=0;}
 }
 
-var field={width:650, height:650};
-var fieldcolor="#000000";
-
-var canvas=document.getElementById("canvas"), ctx = canvas.getContext("2d");
-canvas.width = field.width;
-canvas.height = field.height;
-
 var fps=60;
 
-var ringsize=300;
-var ringcolour="#000000";
-var ringpipingcolour="#00AADD";
-var ringpipingwidth=3;
+var player={x:levelinfo[level].px, y:levelinfo[level].py}
 
-var player={
-	x:field.width/2,
-	y:field.height/2,
-	radius:5,
-	colour:"#CC0000",
-	outlinecolour:"#FFFFBB",
-	outlinewidth:2,
-	speed:3
+var numberofgoals=[];
+var goal=[];
+
+numberofgoals[1]=1;
+goal[1]=[];
+for(i=0; i<numberofgoals[1]; i++){
+	goal[1][i]={
+		x:field.width/2,
+		y:field.width/2,
+		radius:10,
+		colour:"#444444",
+		outlinecolour:"#DDDDDD",
+		outlinewidth:2,
+		touched:0
+	}
 }
 
-var numberofenemies=21;
+numberofgoals[2]=1;
+goal[2]=[];
+for(i=0; i<numberofgoals[2]; i++){
+	goal[2][i]={
+		x:field.width/2,
+		y:field.width/2,
+		radius:10,
+		colour:"#444444",
+		outlinecolour:"#DDDDDD",
+		outlinewidth:2,
+		touched:0
+	}
+}
+
+var numberofenemies=[];
 var enemy=[];
-for(i=0; i<numberofenemies; i++){
-	enemy[i]={
-		x:field.width/2+ringsize*Math.cos(2*Math.PI*i/numberofenemies),
-		y:field.width/2+ringsize*Math.sin(2*Math.PI*i/numberofenemies),
+
+numberofenemies[1]=21;
+enemy[1]=[];
+for(i=0; i<numberofenemies[1]; i++){
+	enemy[1][i]={
+		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[1]),
+		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[1]),
+		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[1]),
+		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[1]),
 		radius:9,
 		colour:"#0000CC",
 		outlinecolour:"#BBFFFF",
 		outlinewidth:2,
-		speed:1
+		speed:1,
+		touched:0,
+		touchedcolour:"#330000",
+		touchedoutline:"#EE0000",
+		validgoal:[]
 	}
+	for(j=0; j<numberofgoals[1]; j++){enemy[1][i].validgoal[j]=1}
+}
+
+numberofenemies[2]=21;
+enemy[2]=[];
+for(i=0; i<numberofenemies[2]; i++){
+	enemy[2][i]={
+		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[2]),
+		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[2]),
+		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[2]),
+		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[2]),
+		radius:9,
+		colour:"#0000CC",
+		outlinecolour:"#BBFFFF",
+		outlinewidth:2,
+		speed:1,
+		touched:0,
+		touchedcolour:"#330000",
+		touchedoutline:"#EE0000",
+		validgoal:[]
+	}
+	for(j=0; j<numberofgoals[2]; j++){enemy[2][i].validgoal[j]=1}
 }
 
 var doenemiesmove=0;
 
 var time=0;
-var restarttime=850;
+var restarttime=0;
 var restartduration=60;
 
-var goalsize=10;
-var goalcolour="#444444";
-var goalpipingcolour="#DDDDDD";
-var goalpipingwidth=2;
-
 var won=0;
-var targettotalenemygoaldistance=200;
-var totalenemygoaldistance=targettotalenemygoaldistance+1;
+var totalenemygoaldistance=levelinfo[level].ttegd+1;
+
+var textfont="40px Georgia";
+var textcolor="255, 255, 255";
+var textopacity=0;
+var textxpos=10;
+var textypos=70;
+var fadeslowness=60;
+
+var lost=0;
+var ringout=0;
+var collision=0;
+
+var tempmingoaldist=0;
+var goalstouched=0;
 
 function draw(){
 
-	ctx.fillStyle=fieldcolor;
+	ctx.fillStyle=levelinfo[level].fcolour;
 	ctx.fillRect(0, 0, field.width, field.height);
 
+	ctx.font=textfont;
+  ctx.fillStyle = "rgba("+textcolor+", "+(1-Math.abs((fadeslowness-time)/fadeslowness))+")";
+	ctx.fillText(numbers[level-1], textxpos, textypos);
+
 	ctx.beginPath();
-	ctx.arc(field.width/2, field.height/2, ringsize, 0, 2 * Math.PI);
-	ctx.fillStyle=ringcolour;
-	ctx.lineWidth=ringpipingwidth;
-	ctx.strokeStyle=ringpipingcolour;
+	ctx.arc(field.width/2, field.height/2, levelinfo[level].rsize, 0, 2 * Math.PI);
+	ctx.fillStyle=levelinfo[level].rcolour;
+	ctx.lineWidth=levelinfo[level].rpipingwidth;
+	if(ringout){ctx.strokeStyle=levelinfo[level].ringoutcolour;}
+	else{ctx.strokeStyle=levelinfo[level].rpipingcolour;}
 	ctx.fill();
 	ctx.stroke();
 
-	ctx.beginPath();
-	ctx.arc(field.width/2, field.height/2, goalsize, 0, 2 * Math.PI);
-	ctx.fillStyle=goalcolour;
-	ctx.lineWidth=goalpipingwidth;
-	ctx.strokeStyle=goalpipingcolour;
-	ctx.fill();
-	ctx.stroke();
-
-	for(i=0; i<numberofenemies; i++){
+	for(i=0; i<numberofgoals[level]; i++){
 		ctx.beginPath();
-		ctx.arc(enemy[i].x, enemy[i].y, enemy[i].radius, 0, 2 * Math.PI);
-		ctx.fillStyle=enemy[i].colour;
-		ctx.lineWidth=enemy[i].outlinewidth;
-		ctx.strokeStyle=enemy[i].outlinecolour;
+		ctx.arc(goal[level][i].x, goal[level][i].x, goal[level][i].radius, 0, 2 * Math.PI);
+		ctx.fillStyle=goal[level][i].colour;
+		ctx.lineWidth=goal[level][i].outlinewidth;
+		ctx.strokeStyle=goal[level][i].outlinecolour;
+		ctx.fill();
+		ctx.stroke();
+	}
+
+	for(i=0; i<numberofenemies[level]; i++){
+		ctx.beginPath();
+		ctx.arc(enemy[level][i].x, enemy[level][i].y, enemy[level][i].radius, 0, 2 * Math.PI);
+		if(enemy[level][i].touched){ctx.fillStyle=enemy[level][i].touchedcolour; ctx.strokeStyle=enemy[level][i].touchedoutline;}
+		else{ctx.fillStyle=enemy[level][i].colour; ctx.strokeStyle=enemy[level][i].outlinecolour;}
+		ctx.lineWidth=enemy[level][i].outlinewidth;
 		ctx.fill();
 		ctx.stroke();
 	}
 
 	ctx.beginPath();
-	ctx.arc(player.x, player.y, player.radius, 0, 2 * Math.PI);
-	ctx.fillStyle=player.colour;
-	ctx.lineWidth=player.outlinewidth;
-	ctx.strokeStyle=player.outlinecolour;
+	ctx.arc(player.x, player.y, levelinfo[level].pradius, 0, 2 * Math.PI);
+	ctx.fillStyle=levelinfo[level].pcolour;
+	ctx.lineWidth=levelinfo[level].poutlinewidth;
+	ctx.strokeStyle=levelinfo[level].poutlinecolour;
 	ctx.fill();
 	ctx.stroke();
 
-	if(rightdown && (!updown && !downdown)){player.x+=player.speed; doenemiesmove=1;}
-	else if(rightdown){player.x+=Math.sqrt(2)*player.speed/2; doenemiesmove=1;}
+	if(!collision && !ringout && rightdown && (!updown && !downdown)){player.x+=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!collision && !ringout && rightdown){player.x+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(leftdown && (!updown && !downdown)){player.x-=player.speed; doenemiesmove=1;}
-	else if(leftdown){player.x-=Math.sqrt(2)*player.speed/2; doenemiesmove=1;}
+	if(!collision && !ringout && leftdown && (!updown && !downdown)){player.x-=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!collision && !ringout && leftdown){player.x-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(updown && (!leftdown && !rightdown)){player.y-=player.speed; doenemiesmove=1;}
-	else if(updown){player.y-=Math.sqrt(2)*player.speed/2; doenemiesmove=1;}
+	if(!collision && !ringout && updown && (!leftdown && !rightdown)){player.y-=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!collision && !ringout && updown){player.y-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(downdown && (!leftdown && !rightdown)){player.y+=player.speed; doenemiesmove=1;}
-	else if(downdown){player.y+=Math.sqrt(2)*player.speed/2; doenemiesmove=1;}
+	if(!collision && !ringout && downdown && (!leftdown && !rightdown)){player.y+=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!collision && !ringout && downdown){player.y+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(doenemiesmove){
+	if(!lost && Math.sqrt((player.x-field.width/2)*(player.x-field.width/2)+(player.y-field.height/2)*(player.y-field.height/2))>levelinfo[level].rsize-levelinfo[level].pradius){restarttime=time; lost=1; ringout=1;}
+
+	if(doenemiesmove || !doenemiesmove){
 		totalenemygoaldistance=0;
-		for(i=0; i<numberofenemies; i++){
-			enemy[i].x-=enemy[i].speed*(enemy[i].x-player.x)/Math.sqrt((enemy[i].x-player.x)*(enemy[i].x-player.x)+(enemy[i].y-player.y)*(enemy[i].y-player.y));
-			enemy[i].y-=enemy[i].speed*(enemy[i].y-player.y)/Math.sqrt((enemy[i].x-player.x)*(enemy[i].x-player.x)+(enemy[i].y-player.y)*(enemy[i].y-player.y));
-			totalenemygoaldistance+=Math.sqrt((enemy[i].x-field.width/2)*(enemy[i].x-field.width/2)+(enemy[i].y-field.height/2)*(enemy[i].y-field.height/2))
+		for(i=0; i<numberofgoals[level]; i++){goal[level][i].touched=0;}
+		for(i=0; i<numberofenemies[level]; i++){
+			enemy[level][i].x-=enemy[level][i].speed*(enemy[level][i].x-player.x)/Math.sqrt((enemy[level][i].x-player.x)*(enemy[level][i].x-player.x)+(enemy[level][i].y-player.y)*(enemy[level][i].y-player.y));
+			enemy[level][i].y-=enemy[level][i].speed*(enemy[level][i].y-player.y)/Math.sqrt((enemy[level][i].x-player.x)*(enemy[level][i].x-player.x)+(enemy[level][i].y-player.y)*(enemy[level][i].y-player.y));
+
+			tempmingoaldist=field.width;
+
+			for(j=0; j<numberofgoals[level]; j++){
+				if(enemy[level][i].validgoal[j] && Math.sqrt((enemy[level][i].x-goal[level][j].x)*(enemy[level][i].x-goal[level][j].x)+(enemy[level][i].y-goal[level][j].y)*(enemy[level][i].y-goal[level][j].y))<tempmingoaldist){tempmingoaldist=Math.sqrt((enemy[level][i].x-goal[level][j].x)*(enemy[level][i].x-goal[level][j].x)+(enemy[level][i].y-goal[level][j].y)*(enemy[level][i].y-goal[level][j].y));}
+				if(Math.sqrt((enemy[level][i].x-goal[level][j].x)*(enemy[level][i].x-goal[level][j].x)+(enemy[level][i].y-goal[level][j].y)*(enemy[level][i].y-goal[level][j].y))<Math.min(enemy[level][i].radius, goal[level][j].radius)){goal[level][j].touched=1;}
+			}
+
+			totalenemygoaldistance+=tempmingoaldist;
+
+			if(!lost && Math.sqrt((enemy[level][i].x-player.x)*(enemy[level][i].x-player.x)+(enemy[level][i].y-player.y)*(enemy[level][i].y-player.y))<enemy[level][1].radius+levelinfo[level].pradius){restarttime=time; lost=1; enemy[level][i].touched=1; collision=1;}
 		}
 	}
 
@@ -167,24 +254,37 @@ function draw(){
 
 	time++;
 
-	if(totalenemygoaldistance<targettotalenemygoaldistance && !won){restarttime=time; won=1;}
+	goalstouched=0;
+	for(i=0; i<numberofgoals[level]; i++){if(goal[level][i].touched){goalstouched++}}
+
+	if(goalstouched==numberofgoals[level] && totalenemygoaldistance<levelinfo[level].ttegd && !won && !lost){restarttime=time; won=1;}
 
 	if(won){
 		ctx.beginPath();
-		ctx.arc(field.width/2, field.height/2, ((time-restarttime)/restartduration)*ringsize, 0, 2 * Math.PI);
-		ctx.fillStyle=ringcolour;
-		ctx.lineWidth=ringpipingwidth;
-		ctx.strokeStyle=ringpipingcolour;
+		ctx.arc(field.width/2, field.height/2, ((time-restarttime)/restartduration)*levelinfo[level].rsize, 0, 2 * Math.PI);
+		ctx.fillStyle=levelinfo[level+1].rcolour;
+		ctx.lineWidth=levelinfo[level+1].rpipingwidth;
+		ctx.strokeStyle=levelinfo[level+1].rpipingcolour;
 		ctx.fill();
 		ctx.stroke();
 	}
 
-	if(won && time==restarttime+restartduration){
-		won=0;
-		time=0;
-		totalenemygoaldistance=targettotalenemygoaldistance+1;
-		for(i=0; i<numberofenemies; i++){enemy[i].x=field.width/2+ringsize*Math.cos(2*Math.PI*i/numberofenemies); enemy[i].y=field.height/2+ringsize*Math.sin(2*Math.PI*i/numberofenemies);}
-		player.x=field.width/2; player.y=field.height/2;
+	if(lost){
+		ctx.beginPath();
+		ctx.arc(field.width/2, field.height/2, ((time-restarttime)/restartduration)*levelinfo[level].rsize, 0, 2 * Math.PI);
+		ctx.fillStyle=levelinfo[level].rcolour;
+		ctx.lineWidth=levelinfo[level].rpipingwidth;
+		ctx.strokeStyle=levelinfo[level].rpipingcolour;
+		ctx.fill();
+		ctx.stroke();
+	}
+
+	if((won || lost) && time==restarttime+restartduration){
+		for(i=0; i<numberofenemies[level]; i++){enemy[level][i].x=enemy[level][i].startingx; enemy[level][i].y=enemy[level][i].startingy; enemy[level][i].touched=0;}
+		for(i=0; i<numberofgoals[level]; i++){goal[level][i].touched=0;}
+		if(won){level++;}
+		won=0; lost=0; time=0; ringout=0; collision=0; totalenemygoaldistance=levelinfo[level].ttegd+1;
+		player.x=levelinfo[level].px; player.y=levelinfo[level].py;
 	}
 
 	setTimeout(draw, 1000/fps);
