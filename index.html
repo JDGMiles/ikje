@@ -38,23 +38,225 @@ var canvas=document.getElementById("canvas"), ctx = canvas.getContext("2d");
 canvas.width = field.width;
 canvas.height = field.height;
 
-var level=10;
+var level=4;
 
 var levelinfo=[];
+var numberofgoals=[];
+var goal=[];
+var numberofenemies=[];
+var enemy=[];
 
-levelinfo[1]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+levelinfo[1]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#DC9000", rpipingwidth:3, pradius:13, px:field.width/2, py:field.height/2, pcolour:"#660000", poutlinecolour:"#FFBBBB", poutlinewidth:3, pspeed:3, ttegd:10, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
 
-levelinfo[2]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+numberofgoals[1]=1;
+goal[1]=[];
+for(i=0; i<numberofgoals[1]; i++){
+	goal[1][i]={
+		x:field.width/2,
+		y:field.width/2,
+		radius:52,
+		colour:"#444444",
+		outlinecolour:"#DDDDDD",
+		outlinewidth:2,
+		touched:0
+	}
+}
 
-levelinfo[3]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+numberofenemies[1]=2;
+enemy[1]=[];
+for(i=0; i<numberofenemies[1]; i++){
+	enemy[1][i]={
+		startingx:field.width/2+0.8*levelinfo[1].rsize*Math.cos(0),
+		startingy:field.width/2+0.8*levelinfo[1].rsize*Math.sin(0),
+		x:field.width/2+0.8*levelinfo[1].rsize*Math.cos(0),
+		y:field.width/2+0.8*levelinfo[1].rsize*Math.sin(0),
+		radius:50,
+		colour:"#005500",
+		outlinecolour:"#BBFFCC",
+		outlinewidth:4,
+		speed:0.7,
+		touched:0,
+		touchedcolour:"#330000",
+		touchedoutline:"#EE0000",
+		validgoal:[]
+	}
+	for(j=0; j<numberofgoals[1]; j++){enemy[1][i].validgoal[j]=1}
+}
 
-levelinfo[4]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+levelinfo[2]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#0000DD", rpipingwidth:3, pradius:20, px:field.width/2, py:field.height/2, pcolour:"#000033", poutlinecolour:"#0066EE", poutlinewidth:2, pspeed:4, ttegd:30, ringoutcolour:"#BB0000"}
+
+numberofgoals[2]=1;
+goal[2]=[];
+for(i=0; i<numberofgoals[2]; i++){
+	goal[2][i]={
+		x:field.width/2,
+		y:field.height/2,
+		radius:32,
+		colour:"#444444",
+		outlinecolour:"#DDDDDD",
+		outlinewidth:2,
+		touched:0
+	}
+}
+
+numberofenemies[2]=4;
+enemy[2]=[];
+for(i=0; i<numberofenemies[2]; i++){
+	enemy[2][i]={
+		startingx:field.width/2+levelinfo[2].rsize*Math.cos(2*Math.PI*i/numberofenemies[2]),
+		startingy:field.width/2+levelinfo[2].rsize*Math.sin(2*Math.PI*i/numberofenemies[2]),
+		x:field.width/2+levelinfo[2].rsize*Math.cos(2*Math.PI*i/numberofenemies[2]),
+		y:field.width/2+levelinfo[2].rsize*Math.sin(2*Math.PI*i/numberofenemies[2]),
+		radius:32,
+		colour:"#000088",
+		outlinecolour:"#7799EE",
+		outlinewidth:2,
+		speed:1.5,
+		touched:0,
+		touchedcolour:"#330000",
+		touchedoutline:"#EE0000",
+		validgoal:[]
+	}
+	for(j=0; j<numberofgoals[2]; j++){enemy[2][i].validgoal[j]=1}
+}
+
+levelinfo[3]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00DD00", rpipingwidth:3, pradius:25, px:field.width/2, py:525, pcolour:"#005500", poutlinecolour:"#AACCAA", poutlinewidth:2, pspeed:3, ttegd:10, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+
+numberofgoals[3]=1;
+goal[3]=[];
+for(i=0; i<numberofgoals[3]; i++){
+	goal[3][i]={
+		x:200,
+		y:400,
+		radius:25,
+		colour:"#444444",
+		outlinecolour:"#DDDDDD",
+		outlinewidth:2,
+		touched:0
+	}
+}
+
+numberofenemies[3]=2;
+enemy[3]=[];
+for(i=0; i<numberofenemies[3]; i++){
+	enemy[3][i]={
+		startingx:field.width/2,
+		startingy:110,
+		x:field.width/2,
+		y:120,
+		radius:25,
+		colour:"#008800",
+		outlinecolour:"#AADDAA",
+		outlinewidth:2,
+		speed:4,
+		touched:0,
+		touchedcolour:"#330000",
+		touchedoutline:"#EE0000",
+		validgoal:[]
+	}
+	for(j=0; j<numberofgoals[3]; j++){enemy[3][i].validgoal[j]=1}
+}
+
+levelinfo[4]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00DD00", rpipingwidth:3, pradius:9, px:410, py:525, pcolour:"#005500", poutlinecolour:"#AACCAA", poutlinewidth:2, pspeed:3, ttegd:10, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+
+numberofgoals[4]=2;
+goal[4]=[];
+goal[4][0]={
+	x:200,
+	y:400,
+	radius:15,
+	colour:"#444444",
+	outlinecolour:"#DDDDDD",
+	outlinewidth:2,
+	touched:0
+}
+goal[4][1]={
+	x:400,
+	y:250,
+	radius:45,
+	colour:"#444444",
+	outlinecolour:"#DDDDDD",
+	outlinewidth:2,
+	touched:0
+}
+
+numberofenemies[4]=2;
+enemy[4]=[];
+enemy[4][0]={
+	startingx:field.width/2,
+	startingy:90,
+	x:field.width/2,
+	y:90,
+	radius:45,
+	colour:"#008800",
+	outlinecolour:"#AADDAA",
+	outlinewidth:2,
+	speed:0.6,
+	touched:0,
+	touchedcolour:"#330000",
+	touchedoutline:"#EE0000",
+	validgoal:[]
+}
+enemy[4][1]={
+	startingx:70,
+	startingy:360,
+	x:70,
+	y:360,
+	radius:15,
+	colour:"#008800",
+	outlinecolour:"#AADDAA",
+	outlinewidth:2,
+	speed:2,
+	touched:0,
+	touchedcolour:"#330000",
+	touchedoutline:"#EE0000",
+	validgoal:[]
+}
+enemy[4][0].validgoal[0]=1;
+enemy[4][0].validgoal[1]=0;
+enemy[4][1].validgoal[0]=0;
+enemy[4][1].validgoal[1]=1;
 
 levelinfo[5]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
 
 levelinfo[6]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
 
-levelinfo[7]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+levelinfo[7]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#FFDDEE", rpipingwidth:3, pradius:15, px:143, py:525, pcolour:"#BB4444", poutlinecolour:"#FFDDEE", poutlinewidth:2, pspeed:3, ttegd:10, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
+
+numberofgoals[7]=1;
+goal[7]=[];
+for(i=0; i<numberofgoals[7]; i++){
+	goal[7][i]={
+		x:510,
+		y:525,
+		radius:15,
+		colour:"#444444",
+		outlinecolour:"#DDDDDD",
+		outlinewidth:2,
+		touched:0
+	}
+}
+
+numberofenemies[7]=2;
+enemy[7]=[];
+for(i=0; i<numberofenemies[7]; i++){
+	enemy[7][i]={
+		startingx:160,
+		startingy:110,
+		x:143,
+		y:120,
+		radius:15,
+		colour:"#AA4466",
+		outlinecolour:"#F6DDEE",
+		outlinewidth:2,
+		speed:2,
+		touched:0,
+		touchedcolour:"#330000",
+		touchedoutline:"#EE0000",
+		validgoal:[]
+	}
+	for(j=0; j<numberofgoals[7]; j++){enemy[7][i].validgoal[j]=1}
+}
 
 levelinfo[8]={fcolour:"#000000", rsize:300, rcolour:"#000000", rpipingcolour:"#00AADD", rpipingwidth:3, pradius:5, px:field.width/2, py:field.height/2, pcolour:"#CC0000", poutlinecolour:"#FFFFBB", poutlinewidth:2, pspeed:3, ttegd:70, gx:field.width/2, gy:field.height/2, ringoutcolour:"#BB0000"}
 
@@ -87,65 +289,6 @@ var fps=60;
 
 var player={x:levelinfo[level].px, y:levelinfo[level].py}
 
-var numberofgoals=[];
-var goal=[];
-
-numberofgoals[1]=1;
-goal[1]=[];
-for(i=0; i<numberofgoals[1]; i++){
-	goal[1][i]={
-		x:field.width/2,
-		y:field.width/2,
-		radius:10,
-		colour:"#444444",
-		outlinecolour:"#DDDDDD",
-		outlinewidth:2,
-		touched:0
-	}
-}
-
-numberofgoals[2]=1;
-goal[2]=[];
-for(i=0; i<numberofgoals[2]; i++){
-	goal[2][i]={
-		x:field.width/2,
-		y:field.width/2,
-		radius:10,
-		colour:"#444444",
-		outlinecolour:"#DDDDDD",
-		outlinewidth:2,
-		touched:0
-	}
-}
-
-numberofgoals[3]=1;
-goal[3]=[];
-for(i=0; i<numberofgoals[3]; i++){
-	goal[3][i]={
-		x:field.width/2,
-		y:field.width/2,
-		radius:10,
-		colour:"#444444",
-		outlinecolour:"#DDDDDD",
-		outlinewidth:2,
-		touched:0
-	}
-}
-
-numberofgoals[4]=1;
-goal[4]=[];
-for(i=0; i<numberofgoals[4]; i++){
-	goal[4][i]={
-		x:field.width/2,
-		y:field.width/2,
-		radius:10,
-		colour:"#444444",
-		outlinecolour:"#DDDDDD",
-		outlinewidth:2,
-		touched:0
-	}
-}
-
 numberofgoals[5]=1;
 goal[5]=[];
 for(i=0; i<numberofgoals[5]; i++){
@@ -164,20 +307,6 @@ numberofgoals[6]=1;
 goal[6]=[];
 for(i=0; i<numberofgoals[6]; i++){
 	goal[6][i]={
-		x:field.width/2,
-		y:field.width/2,
-		radius:10,
-		colour:"#444444",
-		outlinecolour:"#DDDDDD",
-		outlinewidth:2,
-		touched:0
-	}
-}
-
-numberofgoals[7]=1;
-goal[7]=[];
-for(i=0; i<numberofgoals[7]; i++){
-	goal[7][i]={
 		x:field.width/2,
 		y:field.width/2,
 		radius:10,
@@ -230,101 +359,14 @@ for(i=0; i<numberofgoals[10]; i++){
 	}
 }
 
-var numberofenemies=[];
-var enemy=[];
-
-numberofenemies[1]=21;
-enemy[1]=[];
-for(i=0; i<numberofenemies[1]; i++){
-	enemy[1][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[1]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[1]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[1]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[1]),
-		radius:9,
-		colour:"#0000CC",
-		outlinecolour:"#BBFFFF",
-		outlinewidth:2,
-		speed:1,
-		touched:0,
-		touchedcolour:"#330000",
-		touchedoutline:"#EE0000",
-		validgoal:[]
-	}
-	for(j=0; j<numberofgoals[1]; j++){enemy[1][i].validgoal[j]=1}
-}
-
-numberofenemies[2]=21;
-enemy[2]=[];
-for(i=0; i<numberofenemies[2]; i++){
-	enemy[2][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[2]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[2]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[2]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[2]),
-		radius:9,
-		colour:"#0000CC",
-		outlinecolour:"#BBFFFF",
-		outlinewidth:2,
-		speed:1,
-		touched:0,
-		touchedcolour:"#330000",
-		touchedoutline:"#EE0000",
-		validgoal:[]
-	}
-	for(j=0; j<numberofgoals[2]; j++){enemy[2][i].validgoal[j]=1}
-}
-
-numberofenemies[3]=21;
-enemy[3]=[];
-for(i=0; i<numberofenemies[3]; i++){
-	enemy[3][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[3]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[3]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[3]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[3]),
-		radius:9,
-		colour:"#0000CC",
-		outlinecolour:"#BBFFFF",
-		outlinewidth:2,
-		speed:1,
-		touched:0,
-		touchedcolour:"#330000",
-		touchedoutline:"#EE0000",
-		validgoal:[]
-	}
-	for(j=0; j<numberofgoals[3]; j++){enemy[3][i].validgoal[j]=1}
-}
-
-numberofenemies[4]=21;
-enemy[4]=[];
-for(i=0; i<numberofenemies[4]; i++){
-	enemy[4][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[4]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[4]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[4]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[4]),
-		radius:9,
-		colour:"#0000CC",
-		outlinecolour:"#BBFFFF",
-		outlinewidth:2,
-		speed:1,
-		touched:0,
-		touchedcolour:"#330000",
-		touchedoutline:"#EE0000",
-		validgoal:[]
-	}
-	for(j=0; j<numberofgoals[4]; j++){enemy[4][i].validgoal[j]=1}
-}
-
 numberofenemies[5]=21;
 enemy[5]=[];
 for(i=0; i<numberofenemies[5]; i++){
 	enemy[5][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[5]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[5]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[5]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[5]),
+		startingx:field.width/2+levelinfo[5].rsize*Math.cos(2*Math.PI*i/numberofenemies[5]),
+		startingy:field.width/2+levelinfo[5].rsize*Math.sin(2*Math.PI*i/numberofenemies[5]),
+		x:field.width/2+levelinfo[5].rsize*Math.cos(2*Math.PI*i/numberofenemies[5]),
+		y:field.width/2+levelinfo[5].rsize*Math.sin(2*Math.PI*i/numberofenemies[5]),
 		radius:9,
 		colour:"#0000CC",
 		outlinecolour:"#BBFFFF",
@@ -342,10 +384,10 @@ numberofenemies[6]=21;
 enemy[6]=[];
 for(i=0; i<numberofenemies[6]; i++){
 	enemy[6][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[6]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[6]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[6]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[6]),
+		startingx:field.width/2+levelinfo[6].rsize*Math.cos(2*Math.PI*i/numberofenemies[6]),
+		startingy:field.width/2+levelinfo[6].rsize*Math.sin(2*Math.PI*i/numberofenemies[6]),
+		x:field.width/2+levelinfo[6].rsize*Math.cos(2*Math.PI*i/numberofenemies[6]),
+		y:field.width/2+levelinfo[6].rsize*Math.sin(2*Math.PI*i/numberofenemies[6]),
 		radius:9,
 		colour:"#0000CC",
 		outlinecolour:"#BBFFFF",
@@ -359,35 +401,14 @@ for(i=0; i<numberofenemies[6]; i++){
 	for(j=0; j<numberofgoals[6]; j++){enemy[6][i].validgoal[j]=1}
 }
 
-numberofenemies[7]=21;
-enemy[7]=[];
-for(i=0; i<numberofenemies[7]; i++){
-	enemy[7][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[7]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[7]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[7]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[7]),
-		radius:9,
-		colour:"#0000CC",
-		outlinecolour:"#BBFFFF",
-		outlinewidth:2,
-		speed:1,
-		touched:0,
-		touchedcolour:"#330000",
-		touchedoutline:"#EE0000",
-		validgoal:[]
-	}
-	for(j=0; j<numberofgoals[7]; j++){enemy[7][i].validgoal[j]=1}
-}
-
 numberofenemies[8]=21;
 enemy[8]=[];
 for(i=0; i<numberofenemies[8]; i++){
 	enemy[8][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[8]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[8]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[8]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[8]),
+		startingx:field.width/2+levelinfo[8].rsize*Math.cos(2*Math.PI*i/numberofenemies[8]),
+		startingy:field.width/2+levelinfo[8].rsize*Math.sin(2*Math.PI*i/numberofenemies[8]),
+		x:field.width/2+levelinfo[8].rsize*Math.cos(2*Math.PI*i/numberofenemies[8]),
+		y:field.width/2+levelinfo[8].rsize*Math.sin(2*Math.PI*i/numberofenemies[8]),
 		radius:9,
 		colour:"#0000CC",
 		outlinecolour:"#BBFFFF",
@@ -405,10 +426,10 @@ numberofenemies[9]=21;
 enemy[9]=[];
 for(i=0; i<numberofenemies[9]; i++){
 	enemy[9][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[9]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[9]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[9]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[9]),
+		startingx:field.width/2+levelinfo[9].rsize*Math.cos(2*Math.PI*i/numberofenemies[9]),
+		startingy:field.width/2+levelinfo[9].rsize*Math.sin(2*Math.PI*i/numberofenemies[9]),
+		x:field.width/2+levelinfo[9].rsize*Math.cos(2*Math.PI*i/numberofenemies[9]),
+		y:field.width/2+levelinfo[9].rsize*Math.sin(2*Math.PI*i/numberofenemies[9]),
 		radius:9,
 		colour:"#0000CC",
 		outlinecolour:"#BBFFFF",
@@ -426,10 +447,10 @@ numberofenemies[10]=21;
 enemy[10]=[];
 for(i=0; i<numberofenemies[10]; i++){
 	enemy[10][i]={
-		startingx:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[10]),
-		startingy:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[10]),
-		x:field.width/2+levelinfo[level].rsize*Math.cos(2*Math.PI*i/numberofenemies[10]),
-		y:field.width/2+levelinfo[level].rsize*Math.sin(2*Math.PI*i/numberofenemies[10]),
+		startingx:field.width/2+levelinfo[10].rsize*Math.cos(2*Math.PI*i/numberofenemies[10]),
+		startingy:field.width/2+levelinfo[10].rsize*Math.sin(2*Math.PI*i/numberofenemies[10]),
+		x:field.width/2+levelinfo[10].rsize*Math.cos(2*Math.PI*i/numberofenemies[10]),
+		y:field.width/2+levelinfo[10].rsize*Math.sin(2*Math.PI*i/numberofenemies[10]),
 		radius:9,
 		colour:"#0000CC",
 		outlinecolour:"#BBFFFF",
@@ -486,7 +507,7 @@ function draw(){
 
 	for(i=0; i<numberofgoals[level]; i++){
 		ctx.beginPath();
-		ctx.arc(goal[level][i].x, goal[level][i].x, goal[level][i].radius, 0, 2 * Math.PI);
+		ctx.arc(goal[level][i].x, goal[level][i].y, goal[level][i].radius, 0, 2 * Math.PI);
 		ctx.fillStyle=goal[level][i].colour;
 		ctx.lineWidth=goal[level][i].outlinewidth;
 		ctx.strokeStyle=goal[level][i].outlinecolour;
@@ -494,7 +515,7 @@ function draw(){
 		ctx.stroke();
 	}
 
-	for(i=0; i<numberofenemies[level]; i++){
+	for(i=numberofenemies[level]-1; i>-1; i--){
 		ctx.beginPath();
 		ctx.arc(enemy[level][i].x, enemy[level][i].y, enemy[level][i].radius, 0, 2 * Math.PI);
 		if(enemy[level][i].touched){ctx.fillStyle=enemy[level][i].touchedcolour; ctx.strokeStyle=enemy[level][i].touchedoutline;}
@@ -512,19 +533,19 @@ function draw(){
 	ctx.fill();
 	ctx.stroke();
 
-	if(!collision && !ringout && rightdown && (!updown && !downdown)){player.x+=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!collision && !ringout && rightdown){player.x+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	if(!won && !collision && !ringout && rightdown && (!updown && !downdown)){player.x+=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!won && !collision && !ringout && rightdown){player.x+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(!collision && !ringout && leftdown && (!updown && !downdown)){player.x-=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!collision && !ringout && leftdown){player.x-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	if(!won && !collision && !ringout && leftdown && (!updown && !downdown)){player.x-=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!won && !collision && !ringout && leftdown){player.x-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(!collision && !ringout && updown && (!leftdown && !rightdown)){player.y-=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!collision && !ringout && updown){player.y-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	if(!won && !collision && !ringout && updown && (!leftdown && !rightdown)){player.y-=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!won && !collision && !ringout && updown){player.y-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(!collision && !ringout && downdown && (!leftdown && !rightdown)){player.y+=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!collision && !ringout && downdown){player.y+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	if(!won && !collision && !ringout && downdown && (!leftdown && !rightdown)){player.y+=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!won && !collision && !ringout && downdown){player.y+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(!lost && Math.sqrt((player.x-field.width/2)*(player.x-field.width/2)+(player.y-field.height/2)*(player.y-field.height/2))>levelinfo[level].rsize-levelinfo[level].pradius){restarttime=time; lost=1; ringout=1;}
+	if(!lost && !won && Math.sqrt((player.x-field.width/2)*(player.x-field.width/2)+(player.y-field.height/2)*(player.y-field.height/2))>levelinfo[level].rsize-levelinfo[level].pradius){restarttime=time; lost=1; ringout=1;}
 
 	if(doenemiesmove || !doenemiesmove){
 		totalenemygoaldistance=0;
@@ -542,7 +563,7 @@ function draw(){
 
 			totalenemygoaldistance+=tempmingoaldist;
 
-			if(!lost && Math.sqrt((enemy[level][i].x-player.x)*(enemy[level][i].x-player.x)+(enemy[level][i].y-player.y)*(enemy[level][i].y-player.y))<enemy[level][1].radius+levelinfo[level].pradius){restarttime=time; lost=1; enemy[level][i].touched=1; collision=1;}
+			if(!lost && !won && Math.sqrt((enemy[level][i].x-player.x)*(enemy[level][i].x-player.x)+(enemy[level][i].y-player.y)*(enemy[level][i].y-player.y))<enemy[level][1].radius+levelinfo[level].pradius){restarttime=time; lost=1; enemy[level][i].touched=1; collision=1;}
 		}
 	}
 
