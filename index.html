@@ -21,7 +21,7 @@
 			<div class="popup">
 	      <div style="font-family:Georgia; color:white; text-align:center; font-size:75px">Ikje</div>
 	      <a class="close" href="#">&times;</a><br style="line-height:5px">
-	      <span style="font-family:Georgia; font-size:30px; color:white; text-align:center;"><img src="controls.png" style="width:500px"><br><a href="https://gfycat.com/FairBrightElkhound" target="_blank"><br style="line-height:10px">Click here to see how to play.</span><br style="line-height:40px">
+	      <span style="font-family:Georgia; font-size:30px; color:white; text-align:center;"><img src="controls.png" style="width:500px"><br><a href="https://gfycat.com/FairBrightElkhound" target="_blank"><br style="line-height:10px">Click here to see how to play.</a></span><br style="line-height:40px">
 	    </div>
 		</div>
 
@@ -737,6 +737,14 @@ function draw(){
 	}
 
 	setTimeout(draw, 1000/fps);
+}
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
 }
 
 draw();
