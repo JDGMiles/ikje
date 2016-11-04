@@ -21,11 +21,12 @@
 			<div class="popup">
 	      <div style="font-family:Georgia; color:white; text-align:center; font-size:75px">Ikje</div>
 	      <a class="close" href="#">&times;</a><br style="line-height:5px">
-	      <span style="font-family:Georgia; font-size:30px; color:white; text-align:center;"><img src="controls.png" style="width:500px"><br><a href="https://gfycat.com/FairBrightElkhound" target="_blank"><br style="line-height:10px">Click here to see how to play.</a></span><br style="line-height:40px">
+	      <span style="font-family:Georgia; font-size:30px; color:white; text-align:center;">Mouse control within the ring,<br>mouse out of the ring:<br><br><img src="controls.png" style="width:500px"><br><a href="https://gfycat.com/FairBrightElkhound" target="_blank"><br style="line-height:10px">Click here to see how to play.</a></span><br style="line-height:40px">
 	    </div>
 		</div>
 
-		<canvas id="canvas" style="padding:0px 80px 0px 80px;"></canvas>
+		<div style="padding:0px 80px 0px 80px;"><canvas id="canvas"></canvas></div>
+		<br><a id="bongo" style="color:black">Bongo</a>
   </center>
 </body>
 </html>
@@ -606,6 +607,10 @@ var collision=0;
 var tempmingoaldist=0;
 var goalstouched=0;
 
+var mousex=0;
+var mousey=0;
+var controlwithmouse=0;
+
 function draw(){
 
 	ctx.fillStyle=levelinfo[level].fcolour;
@@ -652,17 +657,25 @@ function draw(){
 	ctx.fill();
 	ctx.stroke();
 
-	if(!won && !collision && !ringout && rightdown && (!updown && !downdown)){player.x+=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!won && !collision && !ringout && rightdown){player.x+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	controlwithmouse=0;
+	if(Math.sqrt((mousex-canvas.width/2)*(mousex-canvas.width/2)+(mousey-canvas.height/2)*(mousey-canvas.height/2))<levelinfo[level].rsize){controlwithmouse=1;}
 
-	if(!won && !collision && !ringout && leftdown && (!updown && !downdown)){player.x-=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!won && !collision && !ringout && leftdown){player.x-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	if(controlwithmouse && !won && !collision && !ringout && Math.sqrt((player.x-mousex)*(player.x-mousex)+(player.y-mousey)*(player.y-mousey))>levelinfo[level].pradius){
+		player.x-=levelinfo[level].pspeed*(player.x-mousex)/Math.sqrt((player.x-mousex)*(player.x-mousex)+(player.y-mousey)*(player.y-mousey));
+		player.y-=levelinfo[level].pspeed*(player.y-mousey)/Math.sqrt((player.x-mousex)*(player.x-mousex)+(player.y-mousey)*(player.y-mousey));
+	}
 
-	if(!won && !collision && !ringout && updown && (!leftdown && !rightdown)){player.y-=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!won && !collision && !ringout && updown){player.y-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	if(!controlwithmouse && !won && !collision && !ringout && rightdown && (!updown && !downdown)){player.x+=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!controlwithmouse && !won && !collision && !ringout && rightdown){player.x+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
-	if(!won && !collision && !ringout && downdown && (!leftdown && !rightdown)){player.y+=levelinfo[level].pspeed; doenemiesmove=1;}
-	else if(!won && !collision && !ringout && downdown){player.y+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+	if(!controlwithmouse && !won && !collision && !ringout && leftdown && (!updown && !downdown)){player.x-=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!controlwithmouse && !won && !collision && !ringout && leftdown){player.x-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+
+	if(!controlwithmouse && !won && !collision && !ringout && updown && (!leftdown && !rightdown)){player.y-=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!controlwithmouse && !won && !collision && !ringout && updown){player.y-=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
+
+	if(!controlwithmouse && !won && !collision && !ringout && downdown && (!leftdown && !rightdown)){player.y+=levelinfo[level].pspeed; doenemiesmove=1;}
+	else if(!controlwithmouse && !won && !collision && !ringout && downdown){player.y+=Math.sqrt(2)*levelinfo[level].pspeed/2; doenemiesmove=1;}
 
 	if(!lost && !won && Math.sqrt((player.x-field.width/2)*(player.x-field.width/2)+(player.y-field.height/2)*(player.y-field.height/2))>levelinfo[level].rsize-levelinfo[level].pradius){restarttime=time; lost=1; ringout=1;}
 
@@ -736,16 +749,34 @@ function draw(){
 		player.x=levelinfo[level].px; player.y=levelinfo[level].py;
 	}
 
+	document.getElementById("bongo").innerHTML=""+mousex+", "+mousey;
+
 	setTimeout(draw, 1000/fps);
 }
 
-function getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-      x: evt.clientX - rect.left,
-      y: evt.clientY - rect.top
-    };
+function  getMousePos(canvas, evt) {
+  var rect = canvas.getBoundingClientRect(), // abs. size of element
+      scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for X
+      scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for Y
+
+  return {
+    x: (evt.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+    y: (evt.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+  }
 }
+
+function imprintmousecoords(e) {
+    var pos = getMousePos(canvas, e);
+		mousex=pos.x;
+		mousey=pos.y;
+}
+
+function togglemouse(){
+	if(controlwithmouse==0){controlwithmouse=1; document.getElementById("mousecontrol").innerHTML="<img title=\"Sound On/Off\" src=\"../jdgmiles.github.io/soundoff.png\" style=\"width:60px; height:60px\">";}
+	else{controlwithmouse=0; document.getElementById("mousecontrol").innerHTML="<img title=\"Sound On/Off\" src=\"../jdgmiles.github.io/soundon.png\" style=\"width:60px; height:60px\">";}
+}
+
+window.addEventListener('mousemove', imprintmousecoords, false);
 
 draw();
 
