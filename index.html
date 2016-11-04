@@ -21,7 +21,7 @@
 			<div class="popup">
 	      <div style="font-family:Georgia; color:white; text-align:center; font-size:75px">Ikje</div>
 	      <a class="close" href="#">&times;</a><br style="line-height:5px">
-	      <span style="font-family:Georgia; font-size:30px; color:white; text-align:center;">Mouse control within the ring,<br>mouse out of the ring:<br><br><img src="controls.png" style="width:500px"><br><a href="https://gfycat.com/FairBrightElkhound" target="_blank"><br style="line-height:10px">Click here to see how to play.</a></span><br style="line-height:40px">
+	      <span style="font-family:Georgia; font-size:37px; color:white; text-align:center;">Control with your mouse, or:<br><br><img src="controls.png" style="width:500px"><br><a href="https://gfycat.com/FairBrightElkhound" target="_blank"><br style="line-height:10px">Click here to see how to play.</a></span><br style="line-height:40px">
 	    </div>
 		</div>
 
@@ -567,10 +567,10 @@ var updown=0;
 var downdown=0;
 
 document.body.onkeydown = function(e){
-	if(rightdown==0 && (e.keyCode == 39 || e.keyCode == 68)){rightdown++;}
-	if(leftdown==0 && (e.keyCode == 37 || e.keyCode == 65)){leftdown++;}
-	if(updown==0 && (e.keyCode == 38 || e.keyCode == 87)){updown++;}
-	if(downdown==0 && (e.keyCode == 40 || e.keyCode == 83)){downdown++;}
+	if(rightdown==0 && (e.keyCode == 39 || e.keyCode == 68)){rightdown++; controlwithmouse=0;}
+	if(leftdown==0 && (e.keyCode == 37 || e.keyCode == 65)){leftdown++; controlwithmouse=0;}
+	if(updown==0 && (e.keyCode == 38 || e.keyCode == 87)){updown++; controlwithmouse=0;}
+	if(downdown==0 && (e.keyCode == 40 || e.keyCode == 83)){downdown++; controlwithmouse=0;}
 }
 
 document.body.onkeyup = function(e){
@@ -656,9 +656,6 @@ function draw(){
 	ctx.strokeStyle=levelinfo[level].poutlinecolour;
 	ctx.fill();
 	ctx.stroke();
-
-	controlwithmouse=0;
-	if(Math.sqrt((mousex-canvas.width/2)*(mousex-canvas.width/2)+(mousey-canvas.height/2)*(mousey-canvas.height/2))<levelinfo[level].rsize){controlwithmouse=1;}
 
 	if(controlwithmouse && !won && !collision && !ringout && Math.sqrt((player.x-mousex)*(player.x-mousex)+(player.y-mousey)*(player.y-mousey))>levelinfo[level].pradius){
 		player.x-=levelinfo[level].pspeed*(player.x-mousex)/Math.sqrt((player.x-mousex)*(player.x-mousex)+(player.y-mousey)*(player.y-mousey));
@@ -766,6 +763,7 @@ function  getMousePos(canvas, evt) {
 }
 
 function imprintmousecoords(e) {
+	controlwithmouse=1;
     var pos = getMousePos(canvas, e);
 		mousex=pos.x;
 		mousey=pos.y;
